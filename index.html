@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  </head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  <div class="login-container">
+  <div class="login-wrapper">
+    <!-- <div class="sereci-header">
+      <div class="sereci-title">
+        <h1>SISTEMA DE POSTULACIONES SERECI</h1>
+        <h2>SERECI</h2>
+        <div class="sereci-divider"></div>
+      </div>
+    </div> -->
+    <div class="login-card shadow-lg border-0">
+      <div class="card-body p-4">
+        <div class="login-header d-flex align-items-center bg-sereci-orange-dark text-white rounded mb-4 px-3 py-3">
+          <img src="utils/images/sereci.png" alt="Logo Universidad" class="logo-img me-3">
+          <div>
+            <h5 class="mb-1 fw-bold">Sistema de Postulaciones</h5>
+            <small class="text-light">Inicie sesión para acceder al panel de control</small>
+          </div>
+        </div>
+        <form id="loginForm" >
+          <div class="form-floating mb-3">
+            <input type="text" id="username" class="form-control modern-input" required
+              placeholder="Usuario">
+            <label for="username"><i class="bi bi-person-fill me-2"></i>Usuario</label>
+            <div class="invalid-feedback">
+              <i class="bi bi-exclamation-circle me-1"></i>Usuario requerido
+            </div>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="password" id="password" class="form-control modern-input" required
+              placeholder="Contraseña">
+            <label for="password"><i class="bi bi-lock-fill me-2"></i>Contraseña</label>
+            <div class="invalid-feedback">
+              <i class="bi bi-exclamation-circle me-1"></i>Contraseña requerida
+            </div>
+          </div>
+          
+          <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+            Usuario o contrasena no validos
+          </div>
+
+          <button type="submit" class="btn btn-sereci-modern w-100 py-3 mb-3">
+            <span class="spinner-border spinner-border-sm me-2 d-none" id="spinner" role="status"></span>
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            <span>INICIAR SESIÓN</span>
+          </button>
+        
+        </form>
+        <div class="text-center">
+          <small class="text-muted fw-medium">© 2025</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/login.js"></script>
+</body>
+</html>
