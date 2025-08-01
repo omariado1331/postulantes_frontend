@@ -34,12 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('token', data.token);
                 // Redirigir al usuario a la página de administración
                 const rol = data.rol;
+                console.log(data);
 
                 if (rol === 'admin') {
-                    console.log('admin')
-                } else if (rol == 'userTIC'){
-                    console.log('admin')
-                } else if (rol == 'daf') {
+                    window.location.href = 'views/postulantes.html';
+                } else if (rol == 'TICS'){
+                    window.location.href = 'views/postulantes.html';
+                } else if (rol == 'JAF') {
                     console.log('admin')
                 } else if (rol == 'asesoriaLegal'){
                     console.log('admin')

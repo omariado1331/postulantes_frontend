@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Postulantes</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    tr[data-bs-toggle="modal"] { cursor: pointer; }
+    .estado-descartado { color: #dc3545; }
+    .estado-seleccionado { color: #198754; }
+    .estado-norevisado { color: #6c757d; }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>📋 Lista de Postulantes</h3>
+    <a onclick="location.href='index.html'" class="btn btn-sereci-modern">
+      <i class="fas"></i> Cerrar Sesión
+    </a>
+  </div>
+
+  <!-- Botón para exportar a Excel -->
+  <div class="text-center mb-3">
+    <button id="exportarExcel" class="btn btn-sereci-green px-4">
+      📥 Exportar a Excel
+    </button>
+  </div>
+
+  <!-- Buscador -->
+  <div class="mb-3">
+    <input
+      type="text"
+      id="buscador"
+      class="form-control"
+      placeholder="Buscar por Nombre o CI..."
+    />
+  </div>
+
+  <div class="table-responsive ">
+    <table class=" table table-bordered table-hover align-middle " id="tablaPostulantes">
+      <thead class="table-dark bac ">
+        <tr>
+          <th>NOMBRE</th>
+          <th>CI</th>
+          <th>CELULAR</th>
+          <th>NRO EXPERIENCIA</th>
+          <th>CV</th>
+          <th>CI</th>
+          <th>NM</th>
+          <th>C</th>
+          <th>ESTADO</th>
+          <th>MODIFICAR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- llenado de postulantes -->
+      </tbody>
+
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <nav>
+    <ul class="pagination justify-content-center" id="paginacion"></ul>
+  </nav>
+</div>
+
+<!-- Modal para motivo de descarte -->
+<div class="modal fade" id="modalMotivoDescarto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Motivo de descarte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formMotivoDescarto">
+          <input type="hidden" id="postulanteDescartadoId">
+          <div class="mb-3">
+            <label for="motivoDescarto" class="form-label">Ingrese el motivo de descarte:</label>
+            <textarea class="form-control" id="motivoDescarto" rows="3" required></textarea>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-danger">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modales para PDFs -->
+<div class="modal fade" id="pdfModalCI" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Documento de CI</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe src="#" width="100%" height="600px" style="border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pdfModalCV" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Curriculum Vitae</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe src="#" width="100%" height="600px" style="border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pdfModalNM" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">No Militancia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe src="#" width="100%" height="600px" style="border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pdfModalContrato" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Contrato</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe src="#" width="100%" height="600px" style="border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+<script src="../js/postulantes.js"></script>
+
+<!-- Modal de previsualización -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl"> <!-- modal-xl para archivos grandes -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Vista previa del archivo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <iframe id="previewIframe" src="" width="100%" height="600px" style="border:none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
