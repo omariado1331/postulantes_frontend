@@ -1,387 +1,672 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JAF</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    .table-responsive {
-      overflow-x: auto;
-    }
-    .clickable-row { cursor: pointer; }
-    .no-click { cursor: default; }
-    .pdf-btn { cursor: pointer; }
-  </style>
-</head>
-<body class="bg-light">
-
-<div class="container mt-5 login-card">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <img src="sereci.png" alt="Logo Universidad" class="logo-img me-3 modern-alert">
-    <h3>📋 JAF</h3>
-    <a onclick="location.href='index.html'" class="btn btn-sereci-modern">
-      <i class="fas"></i> Cerrar Sesión
-    </a>
-  </div>
-
-  <!-- Botón para exportar a Excel -->
-  <div class="text-center mb-3">
-    <button id="exportarExcel" class="btn btn-sereci-green px-4">
-      📥 Exportar a Excel
-    </button>
-    <button id="procesoCtr" class="btn btn-sereci-alert px-4">
-    <i class="fas fa-users-cog me-2"></i> Proceso de Contratación
-    </button>
-  </div>
-
-  <!-- Buscador -->
-  <div class="mb-3">
-    <input type="text" id="buscador" class="form-control" placeholder="Buscar por Nombre o CI..." />
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover align-middle" id="tablaPostulantes">
-      <thead class="table-dark">
-        <tr>
-          <th>NOMBRE</th>
-          <th>CI</th>
-          <th>FECHA NACIMIENTO</th>
-          <th>DIRECCIÓN</th>
-          <th>CELULAR</th>
-          <th>CORREO</th>
-          <th>CI</th>
-          <th>CV</th>
-          <th>NM</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr data-id="1" data-nombre="Juan Pérez" data-ci="1234567" data-fechanacimiento="1990-05-12" 
-            data-direccion="Av. Siempre Viva 123" data-celular="70012345" data-correo="juan@example.com">
-          <td class="clickable-row">Juan Pérez</td>
-          <td class="clickable-row">1234567</td>
-          <td class="clickable-row">1990-05-12</td>
-          <td class="clickable-row">Av. Siempre Viva 123</td>
-          <td class="clickable-row">70012345</td>
-          <td class="clickable-row">juan@example.com</td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalCI">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalCV">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalNM">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-        </tr>
-        <tr data-id="2" data-nombre="María López" data-ci="7654321" data-fechanacimiento="1988-08-23" 
-            data-direccion="Calle Falsa 123" data-celular="70123456" data-correo="maria@example.com">
-          <td class="clickable-row">María López</td>
-          <td class="clickable-row">7654321</td>
-          <td class="clickable-row">1988-08-23</td>
-          <td class="clickable-row">Calle Falsa 123</td>
-          <td class="clickable-row">70123456</td>
-          <td class="clickable-row">maria@example.com</td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalCI">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalCV">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-          <td class="no-click">
-            <button class="btn btn-warning btn-sm pdf-btn" data-bs-toggle="modal" data-bs-target="#pdfModalNM">
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-        </tr>
-        <!-- Más filas pueden agregarse aquí -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Paginación -->
-  <nav>
-    <ul class="pagination justify-content-center" id="paginacion"></ul>
-  </nav>
-</div>
-
-<!-- Modal para visualizar postulante -->
- <div class="modal fade" id="modalPostulante" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Información del Postulante</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JAF</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .table-responsive {
+        overflow-x: auto;
+      }
+      .clickable-row {
+        cursor: pointer;
+      }
+      .no-click {
+        cursor: default;
+      }
+      .pdf-btn {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5 login-card">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <img
+          src="../utils/images/sereci.png"
+          alt="Logo Universidad"
+          class="logo-img me-3 modern-alert"
+        />
+        <h3>📋 JAF</h3>
+        <a onclick="location.href='../index.html'" class="btn btn-sereci-modern">
+          <i class="fas"></i> Cerrar Sesión
+        </a>
       </div>
-      <div class="modal-body">
-        <form id="formPostulante">
-          <!-- Sección 1: Datos básicos (automáticos) -->
-          <div class="row mb-4 border-bottom pb-3">
-            <h6 class="text-primary">Datos Básicos</h6>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="modalNombre" readonly>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">CI</label>
-                <input type="text" class="form-control" id="modalCI" readonly>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Extensión</label>
-                <input type="text" class="form-control" id="modalExtension" readonly>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Fecha de Nacimiento</label>
-                <input type="date" class="form-control" id="modalFechaNacimiento" readonly>
-              </div>
-            </div>
-          </div>
 
-          <!-- Sección 2: Datos de contratación (automáticos al seleccionar proceso) -->
-          <div class="row mb-4 border-bottom pb-3">
-            <h6 class="text-primary">Datos de Contratación</h6>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Proceso de Contratación</label>
-                <select class="form-select" id="modalProcesoContratacion">
-                  <option value="">Seleccionar...</option>
-                  <option value="operador_rural">Operador Rural</option>
-                  <option value="operador_urbano">Operador Urbano</option>
-                  <option value="soporte">Soporte</option>
-                  <option value="coordinador">Coordinador</option>
+      <!-- Botón para exportar a Excel -->
+      <div class="text-center mb-3">
+        <button id="exportarExcel" class="btn btn-sereci-green px-4">
+          📥 Exportar a Excel
+        </button>
+        <button id="procesoCtr" class="btn btn-sereci-alert px-4">
+          <i class="fas fa-users-cog me-2"></i> Proceso de Contratación
+        </button>
+      </div>
+
+      <!-- Buscador -->
+      <div class="mb-3">
+        <input
+          type="text"
+          id="buscador"
+          class="form-control"
+          placeholder="Buscar por Nombre o CI..."
+        />
+      </div>
+
+      <div class="table-responsive">
+        <table
+          class="table table-bordered table-hover align-middle"
+          id="tablaPostulantes"
+        >
+          <thead class="table-dark">
+            <tr>
+              <th>NOMBRE</th>
+              <th>CI</th>
+              <th>FECHA NACIMIENTO</th>
+              <th>DIRECCIÓN</th>
+              <th>CELULAR</th>
+              <th>CORREO</th>
+              <th>CI</th>
+              <th>CV</th>
+              <th>NM</th>
+              <th>ESTADO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              data-id="1"
+              data-nombre="Juan Pérez"
+              data-ci="1234567"
+              data-fechanacimiento="1990-05-12"
+              data-direccion="Av. Siempre Viva 123"
+              data-celular="70012345"
+              data-correo="juan@example.com"
+            >
+              <td class="clickable-row">Juan Pérez</td>
+              <td class="clickable-row">1234567</td>
+              <td class="clickable-row">1990-05-12</td>
+              <td class="clickable-row">Av. Siempre Viva 123</td>
+              <td class="clickable-row">70012345</td>
+              <td class="clickable-row">juan@example.com</td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalCI"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalCV"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalNM"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td>
+                <select
+                  class="form-select estado-select"
+                  data-postulante-id="1"
+                >
+                  <option value="NO REVISADO">NO REVISADO</option>
+                  <option value="DESCARTADO">DESCARTADO</option>
+                  <option value="SELECCIONADO">SELECCIONADO</option>
                 </select>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Control</label>
-                <input type="text" class="form-control" id="modalControl">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Monto</label>
-                <input type="text" class="form-control" id="modalMonto" readonly>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Monto Literal</label>
-                <input type="text" class="form-control" id="modalMontoLiteral" readonly>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Cantidad de Casos</label>
-                <input type="number" class="form-control" id="modalCantidadCasos" readonly>
-              </div>
-            </div>
+              </td>
+            </tr>
+            <tr
+              data-id="2"
+              data-nombre="María López"
+              data-ci="7654321"
+              data-fechanacimiento="1988-08-23"
+              data-direccion="Calle Falsa 123"
+              data-celular="70123456"
+              data-correo="maria@example.com"
+            >
+              <td class="clickable-row">María López</td>
+              <td class="clickable-row">7654321</td>
+              <td class="clickable-row">1988-08-23</td>
+              <td class="clickable-row">Calle Falsa 123</td>
+              <td class="clickable-row">70123456</td>
+              <td class="clickable-row">maria@example.com</td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalCI"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalCV"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td class="no-click">
+                <button
+                  class="btn btn-warning btn-sm pdf-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pdfModalNM"
+                >
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+              </td>
+              <td>
+                <select
+                  class="form-select estado-select"
+                  data-postulante-id="1"
+                >
+                  <option value="NO REVISADO">NO REVISADO</option>
+                  <option value="DESCARTADO">DESCARTADO</option>
+                  <option value="SELECCIONADO">SELECCIONADO</option>
+                </select>
+              </td>
+            </tr>
+            <!-- Más filas pueden agregarse aquí -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <nav>
+        <ul class="pagination justify-content-center" id="paginacion"></ul>
+      </nav>
+    </div>
+
+    <!-- Modal para motivo de descarte -->
+    <div
+      class="modal fade"
+      id="modalMotivoDescarto"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">Motivo de descarte</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-
-          <!-- Sección 3: Datos administrativos (ingreso manual) -->
-          <div class="row">
-            <h6 class="text-primary">Datos Administrativos</h6>
-            <div class="col-md-4">
+          <div class="modal-body">
+            <form id="formMotivoDescarto" onsubmit="return false">
+              <!-- Cambio importante aquí -->
+              <input type="hidden" id="postulanteDescartadoId" />
               <div class="mb-3">
-                <label class="form-label">Nro Grupo</label>
-                <input type="text" class="form-control" id="modalNroGrupo">
+                <label for="motivoDescarto" class="form-label">Motivo:</label>
+                <textarea
+                  class="form-control"
+                  id="motivoDescarto"
+                  rows="3"
+                  required
+                ></textarea>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Nro Adjudicación</label>
-                <input type="text" class="form-control" id="modalNroAdjudicacion">
+              <div class="text-end">
+                <button
+                  type="button"
+                  class="btn btn-secondary me-2"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-danger">Guardar</button>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Preventivo</label>
-                <input type="text" class="form-control" id="modalPreventivo">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Unidad Solicitante</label>
-                <input type="text" class="form-control" id="modalUnidadSolicitante">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Certificación POA</label>
-                <input type="text" class="form-control" id="modalCertificacionPOA">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">PDSE</label>
-                <input type="text" class="form-control" id="modalPDSE">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">FUC</label>
-                <input type="text" class="form-control" id="modalFUC">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Fecha Solicitud</label>
-                <input type="date" class="form-control" id="modalFechaSolicitud">
-              </div>
-            </div>
+            </form>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarDatos">Guardar Cambios</button>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
+    <!-- Modal para visualizar postulante -->
+    <div
+      class="modal fade"
+      id="modalPostulante"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Información del Postulante</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formPostulante">
+              <!-- Sección 1: Datos básicos (automáticos) -->
+              <div class="row mb-4 border-bottom pb-3">
+                <h6 class="text-primary">Datos Básicos</h6>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalNombre"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">CI</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalCI"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Extensión</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalExtension"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Fecha de Nacimiento</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="modalFechaNacimiento"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
 
-<!-- Modales para PDFs -->
-<div class="modal fade" id="pdfModalCI" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Documento de CI</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <iframe src="ruta/ci.pdf" width="100%" height="600px" style="border: none;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
+              <!-- Sección 2: Datos de contratación (automáticos al seleccionar proceso) -->
+              <div class="row mb-4 border-bottom pb-3">
+                <h6 class="text-primary">Datos de Contratación</h6>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Proceso de Contratación</label>
+                    <select class="form-select" id="modalProcesoContratacion">
+                      <option value="">Seleccionar...</option>
+                      <option value="operador_rural">Operador Rural</option>
+                      <option value="operador_urbano">Operador Urbano</option>
+                      <option value="soporte">Soporte</option>
+                      <option value="coordinador">Coordinador</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Control</label>
+                    <input type="text" class="form-control" id="modalControl" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Monto</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalMonto"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Monto Literal</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalMontoLiteral"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Cantidad de Casos</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="modalCantidadCasos"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
 
-<div class="modal fade" id="pdfModalCV" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Curriculum Vitae</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <iframe src="ruta/cv.pdf" width="100%" height="600px" style="border: none;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="pdfModalNM" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">No Militancia</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <iframe src="ruta/nm.pdf" width="100%" height="600px" style="border: none;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal para CRUD de Procesos de Contratacion -->
-<div class="modal fade" id="modalProcesos" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Gestión de Procesos de Contratación</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex justify-content-between mb-3">
-          <button id="btnNuevoProceso" class="btn btn-success">
-            <i class="fas fa-plus me-2"></i>Nuevo Proceso
-          </button>
-          <div class="input-group" style="width: 300px;">
-            <input type="text" id="buscarProceso" class="form-control" placeholder="Buscar proceso...">
-            <button class="btn btn-outline-secondary" type="button">
-              <i class="fas fa-search"></i>
+              <!-- Sección 3: Datos administrativos (ingreso manual) -->
+              <div class="row">
+                <h6 class="text-primary">Datos Administrativos</h6>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Nro Grupo</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalNroGrupo"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Nro Adjudicación</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalNroAdjudicacion"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Preventivo</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalPreventivo"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Unidad Solicitante</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalUnidadSolicitante"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Certificación POA</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="modalCertificacionPOA"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">PDSE</label>
+                    <input type="text" class="form-control" id="modalPDSE" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">FUC</label>
+                    <input type="text" class="form-control" id="modalFUC" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Fecha Solicitud</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="modalFechaSolicitud"
+                    />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarDatos">
+              Guardar Cambios
             </button>
           </div>
         </div>
-        
-        <!-- Formulario (oculto inicialmente) -->
-        <div id="formContainer" class="mb-4 border p-3 rounded" style="display: none;">
-          <h6 class="mb-3" id="formTitle">Nuevo Proceso</h6>
-          <form id="formProceso">
-            <input type="hidden" id="procesoId">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">Nombre del Proceso</label>
-                <input type="text" class="form-control" id="nombreProceso" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Monto</label>
-                <input type="number" class="form-control" id="montoProceso" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Monto Literal</label>
-                <input type="text" class="form-control" id="montoLiteralProceso" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Cantidad de Casos</label>
-                <input type="number" class="form-control" id="casosProceso" required>
-              </div>
-              <div class="col-12 text-end">
-                <button type="button" class="btn btn-secondary me-2" id="btnCancelar">Cancelar</button>
-                <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        
-        <!-- Tabla de procesos -->
-        <div class="table-responsive">
-          <table class="table table-hover" id="tablaProcesos">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Monto</th>
-                <th>Cantidad Casos</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tBodyProcesos">
-              <!-- Datos se cargarán dinámicamente -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
-  </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
-<script src="../js/jaf.js"></script>
-</body>
+    <!-- Modales para PDFs -->
+    <div class="modal fade" id="pdfModalCI" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Documento de CI</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <iframe
+              src="ruta/ci.pdf"
+              width="100%"
+              height="600px"
+              style="border: none"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="pdfModalCV" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Curriculum Vitae</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <iframe
+              src="ruta/cv.pdf"
+              width="100%"
+              height="600px"
+              style="border: none"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="pdfModalNM" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">No Militancia</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <iframe
+              src="ruta/nm.pdf"
+              width="100%"
+              height="600px"
+              style="border: none"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para CRUD de Procesos de Contratacion -->
+    <div class="modal fade" id="modalProcesos" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Gestión de Procesos de Contratación</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex justify-content-between mb-3">
+              <button id="btnNuevoProceso" class="btn btn-success">
+                <i class="fas fa-plus me-2"></i>Nuevo Proceso
+              </button>
+              <div class="input-group" style="width: 300px">
+                <input
+                  type="text"
+                  id="buscarProceso"
+                  class="form-control"
+                  placeholder="Buscar proceso..."
+                />
+                <button class="btn btn-outline-secondary" type="button">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Formulario (oculto inicialmente) -->
+            <div
+              id="formContainer"
+              class="mb-4 border p-3 rounded"
+              style="display: none"
+            >
+              <h6 class="mb-3" id="formTitle">Nuevo Proceso</h6>
+              <form id="formProceso">
+                <input type="hidden" id="procesoId" />
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Nombre del Proceso</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nombreProceso"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Monto</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="montoProceso"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Monto Literal</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="montoLiteralProceso"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Cantidad de Casos</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="casosProceso"
+                      required
+                    />
+                  </div>
+                  <div class="col-12 text-end">
+                    <button
+                      type="button"
+                      class="btn btn-secondary me-2"
+                      id="btnCancelar"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      id="btnGuardar"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Tabla de procesos -->
+            <div class="table-responsive">
+              <table class="table table-hover" id="tablaProcesos">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Monto</th>
+                    <th>Cantidad Casos</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tBodyProcesos">
+                  <!-- Datos se cargarán dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="../js/jaf.js"></script>
+  </body>
 </html>
-
-
